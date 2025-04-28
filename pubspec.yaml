@@ -1,0 +1,22 @@
+
+name: esp32_led_controller
+description: A Flutter app to control ESP32 LED over BLE.
+
+publish_to: 'none'
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_reactive_ble: ^5.0.2
+  flutter_colorpicker: ^1.0.3
+  shared_preferences: ^2.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
