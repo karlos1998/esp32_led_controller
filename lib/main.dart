@@ -78,6 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isScanning = false;
   Timer? _reconnectTimer;
   int _reconnectAttempts = 0; // Track reconnection attempts
+  List<Color> recentColors = []; // Store recently selected colors
+  static const int maxRecentColors = 6; // Maximum number of recent colors to store
 
   @override
   void initState() {
@@ -136,6 +138,15 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     ledOn = prefs.getBool('ledOn') ?? true;
     brightness = prefs.getDouble('brightness') ?? 1.0;
+
+    // Load recent colors
+    final recentColorsList = prefs.getStringList('recentColors');
+    if (recentColorsList != null) {
+      recentColors = recentColorsList
+          .map((colorStr) => Color(int.parse(colorStr)))
+          .toList();
+    }
+
     setState(() {});
   }
 
@@ -144,6 +155,12 @@ class _HomeScreenState extends State<HomeScreen> {
     await prefs.setInt('color', currentColor.value);
     await prefs.setBool('ledOn', ledOn);
     await prefs.setDouble('brightness', brightness);
+
+    // Save recent colors
+    final recentColorsList = recentColors
+        .map((color) => color.value.toString())
+        .toList();
+    await prefs.setStringList('recentColors', recentColorsList);
   }
 
   void _startScan() {
@@ -328,6 +345,20 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
                 setState(() {
+                  // Only add to recent colors if it's a new color
+                  if (tempColor != currentColor) {
+                    // Remove the color if it already exists in the list
+                    recentColors.removeWhere((color) => color.value == tempColor.value);
+
+                    // Add the new color to the beginning of the list
+                    recentColors.insert(0, tempColor);
+
+                    // Ensure we don't exceed the maximum number of recent colors
+                    if (recentColors.length > maxRecentColors) {
+                      recentColors = recentColors.sublist(0, maxRecentColors);
+                    }
+                  }
+
                   currentColor = tempColor;
                   ledOn = true;
                   _sendColor(currentColor);
@@ -351,6 +382,24 @@ class _HomeScreenState extends State<HomeScreen> {
       await _sendColor(Colors.black);
     }
     await _saveState();
+  }
+
+  // Method to select a color from recent colors
+  void _selectRecentColor(int index) {
+    if (index < 0 || index >= recentColors.length) return;
+
+    setState(() {
+      currentColor = recentColors[index];
+      ledOn = true;
+      _sendColor(currentColor);
+
+      // Move this color to the front of the list
+      if (index > 0) {
+        final color = recentColors.removeAt(index);
+        recentColors.insert(0, color);
+        _saveState();
+      }
+    });
   }
 
   // Helper method to get connection status icon and color
@@ -449,9 +498,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Color preview
-            Expanded(
-              flex: 3,
+            // Current color preview (smaller)
+            Container(
+              height: 100, // Fixed height instead of flex
               child: Card(
                 elevation: 4,
                 shape: RoundedRectangleBorder(
@@ -462,11 +511,80 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: ledOn ? currentColor : Colors.black,
                     borderRadius: BorderRadius.circular(16),
                   ),
+                  child: Center(
+                    child: Text(
+                      'Aktualny kolor',
+                      style: TextStyle(
+                        color: ledOn ? (currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white) : Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+
+            // Recent colors
+            if (recentColors.isNotEmpty) ...[
+              Row(
+                children: [
+                  Text(
+                    'Ostatnio wybrane kolory:',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Spacer(),
+                  if (recentColors.length > 1)
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          // Move the first color to the end
+                          final color = recentColors.removeAt(0);
+                          recentColors.add(color);
+                          _saveState();
+                        });
+                      },
+                      child: Text('Przewiń'),
+                    ),
+                ],
+              ),
+              Container(
+                height: 120, // Fixed height for the grid
+                child: GridView.builder(
+                  scrollDirection: Axis.horizontal,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                    childAspectRatio: 1.0,
+                  ),
+                  itemCount: recentColors.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () => _selectRecentColor(index),
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: recentColors[index],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+
+            const SizedBox(height: 16),
 
             // Brightness control
             Card(
