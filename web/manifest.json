@@ -1,6 +1,6 @@
 {
-    "name": "esp32_led_controller",
-    "short_name": "esp32_led_controller",
+    "name": "Touge Light",
+    "short_name": "Touge Light",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

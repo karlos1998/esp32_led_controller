@@ -1,6 +1,6 @@
 
-name: esp32_led_controller
-description: A Flutter app to control ESP32 LED over BLE.
+name: touge_light
+description: Touge Light - A Flutter app to control LED over BLE.
 
 publish_to: 'none'
 
