@@ -33,6 +33,10 @@
 	<string>This app needs Bluetooth access to connect to the ESP32 LED controller</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>This app uses local network to connect to BLE devices</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs location access for BLE scanning on iOS</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs location access for BLE scanning on iOS</string>
 
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>

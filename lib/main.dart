@@ -72,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool ledOn = true;
   double brightness = 1.0; // New brightness control
   String connectionState = 'disconnected'; // Using string instead of enum
+  String? errorMessage; // Store detailed error message
   StreamSubscription? _scanSubscription;
   StreamSubscription? _connectionSubscription;
   bool isScanning = false;
@@ -97,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           connectionState = 'error';
           isConnected = false;
+          errorMessage = 'Bluetooth nie jest gotowy: ${status.toString()}';
         });
       }
     });
@@ -150,6 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       connectionState = 'scanning';
       isScanning = true;
+      errorMessage = null; // Clear error message when scanning
     });
 
     _scanSubscription?.cancel();
@@ -171,6 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           connectionState = 'error';
           isScanning = false;
+          errorMessage = 'Błąd skanowania: $e';
         });
         _scheduleReconnect();
       },
@@ -196,6 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       connectionState = 'connecting';
+      errorMessage = null; // Clear error message when connecting
     });
 
     try {
@@ -213,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             isConnected = true;
             connectionState = 'connected';
+            errorMessage = null; // Clear error message when connected
           });
 
           if (ledOn) {
@@ -224,6 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             isConnected = false;
             connectionState = 'disconnected';
+            errorMessage = null; // Clear error message when disconnected
           });
           _scheduleReconnect();
         }
@@ -233,6 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         isConnected = false;
         connectionState = 'error';
+        errorMessage = 'Błąd połączenia: $e';
       });
       _scheduleReconnect();
     }
@@ -293,6 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // Handle error (could show a snackbar or other notification)
       setState(() {
         connectionState = 'error';
+        errorMessage = 'Błąd wysyłania koloru: $e';
       });
     }
   }
@@ -379,13 +388,47 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
     }
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: color),
-        const SizedBox(width: 8),
-        Text(statusText, style: TextStyle(color: color)),
-      ],
+    // Make the widget clickable only if there's an error
+    if (connectionState == 'error' && errorMessage != null) {
+      return InkWell(
+        onTap: () => _showErrorDetails(),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: color),
+            const SizedBox(width: 8),
+            Text(statusText, style: TextStyle(color: color)),
+          ],
+        ),
+      );
+    } else {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color),
+          const SizedBox(width: 8),
+          Text(statusText, style: TextStyle(color: color)),
+        ],
+      );
+    }
+  }
+
+  // Show error details in a modal dialog
+  void _showErrorDetails() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Szczegóły błędu połączenia'),
+          content: Text(errorMessage ?? 'Nieznany błąd'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Zamknij'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -454,14 +497,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             divisions: 20,
                             onChanged: isConnected
                                 ? (value) {
-                                    setState(() {
-                                      brightness = value;
-                                    });
-                                    if (ledOn) {
-                                      _sendColor(currentColor);
-                                    }
-                                    _saveState();
-                                  }
+                              setState(() {
+                                brightness = value;
+                              });
+                              if (ledOn) {
+                                _sendColor(currentColor);
+                              }
+                              _saveState();
+                            }
                                 : null,
                           ),
                         ),
