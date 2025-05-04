@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -81,12 +82,104 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Color> recentColors = []; // Store recently selected colors
   static const int maxRecentColors = 6; // Maximum number of recent colors to store
 
+  // Method channel for CarPlay communication
+  late MethodChannel _carPlayChannel;
+
   @override
   void initState() {
     super.initState();
     _loadState();
     // Check if BLE is available and permissions are granted before scanning
     _checkBleStatus();
+
+    // Initialize CarPlay method channel
+    _setupCarPlayChannel();
+  }
+
+  // Set up the method channel for CarPlay communication
+  void _setupCarPlayChannel() {
+    _carPlayChannel = const MethodChannel('com.tougelight/carplay');
+    _carPlayChannel.setMethodCallHandler((call) async {
+      print('Received CarPlay method call: ${call.method}');
+
+      switch (call.method) {
+        case 'toggleLed':
+          _toggleLed();
+          break;
+        case 'increaseBrightness':
+          _adjustBrightness(0.05); // Increase by 5%
+          break;
+        case 'decreaseBrightness':
+          _adjustBrightness(-0.05); // Decrease by 5%
+          break;
+        case 'setColor':
+          final colorName = call.arguments as String?;
+          if (colorName != null) {
+            _setColorFromName(colorName);
+          }
+          break;
+        default:
+          throw PlatformException(
+            code: 'UNSUPPORTED_METHOD',
+            message: 'Method ${call.method} not supported',
+          );
+      }
+
+      return null;
+    });
+  }
+
+  // Helper method to adjust brightness from CarPlay
+  void _adjustBrightness(double delta) {
+    if (!isConnected) return;
+
+    setState(() {
+      brightness = (brightness + delta).clamp(0.0, 1.0);
+    });
+
+    if (ledOn) {
+      _sendColor(currentColor);
+    }
+    _saveState();
+  }
+
+  // Helper method to set color from name (for CarPlay)
+  void _setColorFromName(String colorName) {
+    if (!isConnected) return;
+
+    Color newColor;
+    switch (colorName.toLowerCase()) {
+      case 'red':
+        newColor = Colors.red;
+        break;
+      case 'green':
+        newColor = Colors.green;
+        break;
+      case 'blue':
+        newColor = Colors.blue;
+        break;
+      case 'white':
+        newColor = Colors.white;
+        break;
+      default:
+        return; // Unknown color
+    }
+
+    setState(() {
+      currentColor = newColor;
+      ledOn = true;
+
+      // Add to recent colors if not already present
+      if (!recentColors.any((color) => color.value == newColor.value)) {
+        recentColors.insert(0, newColor);
+        if (recentColors.length > maxRecentColors) {
+          recentColors = recentColors.sublist(0, maxRecentColors);
+        }
+      }
+    });
+
+    _sendColor(currentColor);
+    _saveState();
   }
 
   void _checkBleStatus() {
