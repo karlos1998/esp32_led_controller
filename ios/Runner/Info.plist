@@ -66,6 +66,17 @@
 		<true/>
 		<key>UISceneConfigurations</key>
 		<dict>
+			<!-- Regular iPhone/iPad scene configuration -->
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+				</dict>
+			</array>
+			<!-- CarPlay scene configuration -->
 			<key>CPTemplateApplicationSceneSessionRoleApplication</key>
 			<array>
 				<dict>

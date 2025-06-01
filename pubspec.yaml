@@ -2,6 +2,11 @@
 name: touge_light
 description: Touge Light - A Flutter app to control LED over BLE.
 
+# The version number is composed of three parts: major.minor.patch+build_number
+# The build name consists of three numbers separated by dots (major.minor.patch)
+# The build number is a separate number after the + sign
+version: 1.0.0+1
+
 publish_to: 'none'
 
 environment:
