@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Touge Light - Privacy Policy and Content Rights</title>
+  <meta name="description" content="Privacy Policy and Content Rights statement for the Touge Light iOS app.">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f7f4;
+      --surface: #ffffff;
+      --text: #202124;
+      --muted: #5f6368;
+      --accent: #2d7d6f;
+      --border: #dadce0;
+      --shadow: 0 18px 44px rgba(32, 33, 36, 0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111412;
+        --surface: #1b201e;
+        --text: #edf2ef;
+        --muted: #bac4bf;
+        --accent: #72d4c2;
+        --border: #333a37;
+        --shadow: 0 18px 44px rgba(0, 0, 0, 0.32);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.62;
+    }
+
+    .page {
+      width: min(920px, calc(100% - 32px));
+      margin: 48px auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 42px 42px 30px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section {
+      padding: 34px 42px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.2;
+      margin: 0 0 14px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+    }
+
+    h2 {
+      font-size: 1.55rem;
+      margin-top: 4px;
+    }
+
+    h3 {
+      font-size: 1.08rem;
+      margin-top: 26px;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    ul {
+      margin: 0 0 18px;
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin: 0 0 12px;
+      text-transform: uppercase;
+    }
+
+    .summary {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 720px;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 22px;
+    }
+
+    .note {
+      background: color-mix(in srgb, var(--accent) 9%, transparent);
+      border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border));
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: 100%;
+        margin: 0;
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
+      }
+
+      .hero,
+      .section {
+        padding-left: 22px;
+        padding-right: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <p class="eyebrow">Touge Light</p>
+      <h1>Privacy Policy and Content Rights</h1>
+      <p class="summary">Touge Light is a simple iOS app for controlling an ESP32-based LED controller over Bluetooth Low Energy. The app is designed to work locally on your device and does not use accounts, advertising, analytics, or tracking.</p>
+      <p class="meta">Last updated: May 29, 2026</p>
+    </div>
+
+    <div class="section" aria-labelledby="privacy-policy">
+      <h2 id="privacy-policy">Privacy Policy</h2>
+
+      <h3>Information We Collect</h3>
+      <p>Touge Light does not collect, sell, rent, or share personal information. The app does not require an account and does not send personal data to the developer's servers.</p>
+
+      <h3>Local App Data</h3>
+      <p>The app may store the following settings locally on your device so that your LED controller can remember your preferred state:</p>
+      <ul>
+        <li>selected LED color,</li>
+        <li>LED on/off state,</li>
+        <li>brightness level,</li>
+        <li>recently selected colors.</li>
+      </ul>
+      <p>This information stays on your device unless you remove the app or your operating system backs up app data according to your device settings.</p>
+
+      <h3>Bluetooth and Device Permissions</h3>
+      <p>Touge Light uses Bluetooth Low Energy to scan for and connect to a compatible ESP32 LED controller. The app may request Bluetooth permission so it can discover nearby BLE devices and send color or brightness commands to the LED controller.</p>
+      <p>Depending on the operating system version and app build, iOS may show additional permission prompts related to local device discovery. These permissions are used only to connect to and control the LED hardware. Touge Light does not use these permissions to determine your physical location.</p>
+
+      <h3>Data Sent to the LED Controller</h3>
+      <p>When connected, the app sends simple LED control values, such as color and brightness commands, over Bluetooth to the compatible LED controller. These commands are used only for controlling the lighting device.</p>
+
+      <h3>Third-Party Services, Ads, and Tracking</h3>
+      <p>Touge Light does not include advertising, analytics, social media tracking, or third-party tracking services. The app uses standard Flutter libraries and Bluetooth functionality required for the app to operate.</p>
+
+      <h3>Children's Privacy</h3>
+      <p>Touge Light is not designed to collect information from anyone, including children. Because the app does not collect personal information, it does not knowingly collect personal information from children.</p>
+
+      <h3>Changes to This Policy</h3>
+      <p>This policy may be updated if the app's functionality changes. Any updates will be posted on this page with a new "Last updated" date.</p>
+
+      <h3>Contact</h3>
+      <p>If you have questions about this Privacy Policy, please contact the developer through the support or contact information provided on the Touge Light App Store product page.</p>
+    </div>
+
+    <div class="section" aria-labelledby="content-rights">
+      <h2 id="content-rights">Content Rights</h2>
+
+      <h3>App Content</h3>
+      <p>The Touge Light app interface, app name, text, layout, and related app materials are created for this app or used under appropriate licenses. The app does not contain user-generated content, media feeds, or third-party copyrighted content that users can browse, upload, download, or share.</p>
+
+      <h3>Icons and Framework Assets</h3>
+      <p>The app may use standard platform and framework-provided interface elements, such as Material icons and Flutter components, under their applicable licenses. These assets are used only as part of the app's normal user interface.</p>
+
+      <h3>Hardware Control</h3>
+      <p>Touge Light controls a compatible ESP32 LED device over Bluetooth. It does not stream, display, distribute, or provide access to protected third-party content. The Bluetooth commands generated by the app are limited to LED color, brightness, and on/off control.</p>
+
+      <h3>Rights Statement</h3>
+      <p>The developer represents that they have the necessary rights to distribute the Touge Light app and the content included in it. If any rights-related issue is identified, please contact the developer through the support or contact information provided on the App Store product page.</p>
+    </div>
+
+    <div class="section" aria-labelledby="polish-summary">
+      <h2 id="polish-summary">Krótka Informacja Po Polsku</h2>
+      <p>Touge Light to prosta aplikacja do sterowania kontrolerem LED ESP32 przez Bluetooth Low Energy. Aplikacja nie wymaga konta, nie zawiera reklam, nie korzysta z analityki i nie śledzi użytkowników.</p>
+      <p>Aplikacja zapisuje lokalnie na urządzeniu wyłącznie ustawienia potrzebne do działania, takie jak wybrany kolor, jasność, stan włączenia LED oraz ostatnio używane kolory. Dane te nie są wysyłane na serwer dewelopera.</p>
+      <p>Uprawnienia Bluetooth służą tylko do wyszukania i połączenia się z kompatybilnym kontrolerem LED oraz wysyłania komend sterowania światłem.</p>
+    </div>
+  </div>
+</body>
+</html>
